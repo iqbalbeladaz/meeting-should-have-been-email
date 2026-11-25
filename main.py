@@ -36,6 +36,10 @@ def entry_text() -> str:
     """Return the entry, refusing anything outside the gate's limits."""
     if not 1 <= len(ENTRY) <= MAX_CHARS:
         raise ValueError(f"entry is {len(ENTRY)} chars, must be 1-{MAX_CHARS}")
+    if len(ENTRY.encode("utf-8")) > MAX_CHARS:
+        # The gate counts characters, but the leaderboard's Size column
+        # counts bytes; keep the two close so the entry stays small.
+        raise ValueError("entry is too long in bytes")
     if ENTRY.strip() != ENTRY or "\n" in ENTRY or not ENTRY.strip():
         raise ValueError("entry must be one clean, non-empty line")
     return ENTRY
